@@ -1,6 +1,15 @@
 # wakeupbuddies
 
-A new Flutter application.
+Scheduling wake-up video calls.
+
+Working from the files provided by https://github.com/Ronak99/Skype-Clone and https://medium.com/flutterdevs/date-and-time-picker-in-flutter-72141e7531c
+
+# TODO
+
+- Displaying saved time and date from a variable
+- Implementing video-call functionality
+- Creating a database function for creating scheduled calls
+- Background call notification
 
 ## Getting Started
 
