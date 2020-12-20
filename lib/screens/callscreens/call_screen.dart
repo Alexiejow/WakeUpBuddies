@@ -20,22 +20,26 @@ class _CallScreenState extends State<CallScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Column(
-        children: <Widget>[
-          Text(
-            "Call has been made",
-          ),
-          MaterialButton(
-            color: Colors.red,
-            child: Icon(
-                Icons.call_end,
-                color: Colors.white),
-            onPressed: (){
-              callMethods.endCall(call: widget.call);
-              Navigator.pop(context);
-            },
-          ),
-        ],
+      body: Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              "Call has been made",
+            ),
+            MaterialButton(
+              color: Colors.red,
+              child: Icon(
+                  Icons.call_end,
+                  color: Colors.white),
+              onPressed: (){
+                callMethods.endCall(call: widget.call);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wakeupbuddies/constants/strings.dart';
 import 'package:wakeupbuddies/models/call.dart';
 
@@ -6,8 +7,8 @@ class CallMethods {
   final CollectionReference callCollection =
       FirebaseFirestore.instance.collection(CALL_COLLECTION);
 
- // Stream<DocumentSnapshot> callStream({String uid}) =>
-   //   callCollection.doc(uid).snapshots();
+  Stream<DocumentSnapshot> callStream({String uid}) =>
+      callCollection.doc(uid).snapshots();
 
   Future<bool> makeCall({Call call}) async {
     try {

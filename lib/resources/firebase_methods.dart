@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:wakeupbuddies/constants/strings.dart';
 import 'package:wakeupbuddies/models/message.dart';
 import 'package:wakeupbuddies/models/user.dart';
 import 'package:wakeupbuddies/models/wakeup.dart';
@@ -13,7 +14,10 @@ class FirebaseMethods {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
-  static final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  static final CollectionReference _userCollection =
+  _firestore.collection(USERS_COLLECTION);
 
   Userr user = Userr();
 
@@ -42,7 +46,7 @@ class FirebaseMethods {
 
   Future<bool> authenticateUser(User user) async {
 
-    QuerySnapshot result = await firestore
+    QuerySnapshot result = await _firestore
       .collection("users")
       .where("email", isEqualTo: user.email)
         .get();
@@ -62,7 +66,7 @@ class FirebaseMethods {
         profilePhoto: currentUser.photoURL,
         username: username);
 
-    firestore
+    _firestore
         .collection("users")
         .doc(currentUser.uid)
         .set(user.toMap(user));
@@ -78,7 +82,7 @@ class FirebaseMethods {
     List<Userr> userList = List<Userr>();
 
     QuerySnapshot querySnapshot =
-    await firestore.collection("users").get();
+    await _firestore.collection("users").get();
     for (var i = 0; i < querySnapshot.docs.length; i++) {
       if (querySnapshot.docs[i].id != currentUser.uid) {
         userList.add(Userr.fromMap(querySnapshot.docs[i].data()));
@@ -88,17 +92,26 @@ class FirebaseMethods {
     return userList;
   }
 
+  Future<Userr> getUserDetails() async {
+    User currentUser = await getCurrentUser();
+
+    DocumentSnapshot documentSnapshot =
+    await _userCollection.doc(currentUser.uid).get();
+
+    return Userr.fromMap(documentSnapshot.data);
+  }
+
   Future<void> addWakeupToDb(
       Wakeup wakeup, Userr sender, Userr receiver) async {
     var map = wakeup.toMap();
 
-    await firestore
+    await _firestore
         .collection("wakeups")
         .doc(wakeup.senderId)
         .collection(wakeup.receiverId)
         .add(map);
 
-    return await firestore
+    return await _firestore
         .collection("wakeups")
         .doc(wakeup.receiverId)
         .collection(wakeup.senderId)
@@ -109,13 +122,13 @@ class FirebaseMethods {
       Message message, Userr sender, Userr receiver) async {
     var map = message.toMap();
 
-    await firestore
+    await _firestore
         .collection("messages")
         .doc(message.senderId)
         .collection(message.receiverId)
         .add(map);
 
-    return await firestore
+    return await _firestore
         .collection("messages")
         .doc(message.receiverId)
         .collection(message.senderId)

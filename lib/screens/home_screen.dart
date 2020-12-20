@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 import 'package:wakeupbuddies/DateTimePicker.dart';
+import 'package:wakeupbuddies/provider/user_provider.dart';
 import 'package:wakeupbuddies/screens/pageviews/calls_screen.dart';
 import 'package:wakeupbuddies/screens/pageviews/chat_list_screen.dart';
 import 'package:wakeupbuddies/screens/pageviews/contacts_scren.dart';
@@ -16,10 +19,19 @@ class _HomeScreenState extends State<HomeScreen> {
   int _page = 0;
   PageController pageController;
 
+  UserProvider userProvider;
+
   @override
   void initState(){
-    //TODO: implement initState
+
     super.initState();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.refreshUser();
+    });
+
+
     pageController = PageController();
   }
 

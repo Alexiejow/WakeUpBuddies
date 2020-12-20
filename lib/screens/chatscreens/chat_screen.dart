@@ -5,6 +5,7 @@ import 'package:wakeupbuddies/models/message.dart';
 import 'package:wakeupbuddies/models/user.dart';
 import 'package:wakeupbuddies/models/wakeup.dart';
 import 'package:wakeupbuddies/resources/firebase_repository.dart';
+import 'package:wakeupbuddies/utils/call_utilities.dart';
 import 'package:wakeupbuddies/utils/universal_variables.dart';
 import 'package:wakeupbuddies/widgets/appbar.dart';
 import 'package:wakeupbuddies/widgets/custom_tile.dart';
@@ -372,7 +373,11 @@ class _ChatScreenState extends State<ChatScreen> {
           icon: Icon(
             Icons.video_call,
           ),
-          onPressed: () {},
+          onPressed: () => CallUtils.dial(
+            from: sender,
+            to: widget.receiver,
+            context: context,
+          ),
         ),
         IconButton(
           icon: Icon(
