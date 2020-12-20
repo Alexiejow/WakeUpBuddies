@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "873168241688",
+    "project_id": "wake-up-buddies",
+    "storage_bucket": "wake-up-buddies.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873168241688:android:7e84801699469693456f6d",
+        "android_client_info": {
+          "package_name": "com.example.wakeupbuddies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873168241688-umt754d3f2c4ai48b70tro6pdtrbot4b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wakeupbuddies",
+            "certificate_hash": "b66517384b22fefe15098142cc70c630342231c1"
+          }
+        },
+        {
+          "client_id": "873168241688-es21bvfr3iuk64molenp39cjsnrf4gic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnltmj71-bJrJReLuGjFjMbVTlggZWj5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873168241688-es21bvfr3iuk64molenp39cjsnrf4gic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
