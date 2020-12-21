@@ -7,20 +7,20 @@ import 'package:wakeupbuddies/resources/firebase_methods.dart';
 class FirebaseRepository {
   FirebaseMethods _firebaseMethods = FirebaseMethods();
 
-  Future<User> getCurrentUser() =>_firebaseMethods.getCurrentUser();
+  Future<FirebaseUser> getCurrentUser() =>_firebaseMethods.getCurrentUser();
 
   Future<Userr> getUserDetails() => _firebaseMethods.getUserDetails();
 
-  Future<User> signIn() => _firebaseMethods.signIn();
+  Future<FirebaseUser> signIn() => _firebaseMethods.signIn();
 
-  Future<bool> authenticateUser(User user) =>
+  Future<bool> authenticateUser(FirebaseUser user) =>
       _firebaseMethods.authenticateUser(user);
 
-  Future<void> addDataToDb(User user) => _firebaseMethods.addDataToDb(user);
+  Future<void> addDataToDb(FirebaseUser user) => _firebaseMethods.addDataToDb(user);
 
   Future<void> signOut() => _firebaseMethods.signOut();
 
-  Future<List<Userr>> fetchAllUsers(User user) =>
+  Future<List<Userr>> fetchAllUsers(FirebaseUser user) =>
       _firebaseMethods.fetchAllUsers(user);
 
   Future<void> addMessageToDb(Message message, Userr sender, Userr receiver) =>

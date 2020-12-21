@@ -1,8 +1,7 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:wakeupbuddies/models/call.dart';
 import 'package:wakeupbuddies/resources/call_methods.dart';
+import 'package:wakeupbuddies/utils/permissions.dart';
 
 import '../call_screen.dart';
 
@@ -59,12 +58,13 @@ class PickupScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.call),
                   color: Colors.green,
-                  onPressed: () async => Navigator.push(
+                  onPressed: () async => await Permissions.cameraAndMicrophonePermissionsGranted() ?
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CallScreen(call: call),
                     ),
-                  ),
+                  ) : {},
                 ),
               ],
             ),

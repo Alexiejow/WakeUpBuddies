@@ -5,13 +5,16 @@ import 'package:wakeupbuddies/models/message.dart';
 import 'package:wakeupbuddies/models/user.dart';
 import 'package:wakeupbuddies/models/wakeup.dart';
 import 'package:wakeupbuddies/resources/firebase_repository.dart';
+import 'package:wakeupbuddies/screens/callscreens/pickup/pickup_layout.dart';
 import 'package:wakeupbuddies/utils/call_utilities.dart';
+import 'package:wakeupbuddies/utils/permissions.dart';
 import 'package:wakeupbuddies/utils/universal_variables.dart';
 import 'package:wakeupbuddies/widgets/appbar.dart';
 import 'package:wakeupbuddies/widgets/custom_tile.dart';
 import 'package:wakeupbuddies/utils/universal_variables.dart';
 import 'package:wakeupbuddies/widgets/appbar.dart';
 import 'package:wakeupbuddies/widgets/custom_tile.dart';
+
 
 import '../../DateTimePicker.dart';
 
@@ -54,25 +57,27 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: UniversalVariables.blackColor,
-      appBar: customAppBar(context),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: messageList(),
-          ),
-          chatControls(),
-        ],
+    return PickupLayout(
+      scaffold: Scaffold(
+        backgroundColor: UniversalVariables.blackColor,
+        appBar: customAppBar(context),
+        body: Column(
+          children: <Widget>[
+            Flexible(
+              child: messageList(),
+            ),
+            chatControls(),
+          ],
+        ),
       ),
     );
   }
 
   Widget messageList() {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance
+      stream: Firestore.instance
           .collection("messages")
-          .doc(_currentUserId)
+          .document(_currentUserId)
           .collection(widget.receiver.uid)
           .orderBy("timestamp", descending: true)
           .snapshots(),
@@ -82,10 +87,10 @@ class _ChatScreenState extends State<ChatScreen> {
         }
         return ListView.builder(
           padding: EdgeInsets.all(10),
-          itemCount: snapshot.data.docs.length,
+          itemCount: snapshot.data.documents.length,
           reverse: true,
           itemBuilder: (context, index) {
-            return chatMessageItem(snapshot.data.docs[index]);
+            return chatMessageItem(snapshot.data.documents[index]);
           },
         );
       },
@@ -373,11 +378,12 @@ class _ChatScreenState extends State<ChatScreen> {
           icon: Icon(
             Icons.video_call,
           ),
-          onPressed: () => CallUtils.dial(
+          onPressed: () async => await Permissions.cameraAndMicrophonePermissionsGranted() ?
+          CallUtils.dial(
             from: sender,
             to: widget.receiver,
             context: context,
-          ),
+          ) : {},
         ),
         IconButton(
           icon: Icon(

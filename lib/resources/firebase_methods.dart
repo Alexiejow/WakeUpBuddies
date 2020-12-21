@@ -14,62 +14,62 @@ class FirebaseMethods {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final Firestore _firestore = Firestore.instance;
 
   static final CollectionReference _userCollection =
   _firestore.collection(USERS_COLLECTION);
 
   Userr user = Userr();
 
-  Future<User> getCurrentUser() async {
-    User currentUser;
-    currentUser = await _auth.currentUser;
+  Future<FirebaseUser> getCurrentUser() async {
+    FirebaseUser currentUser;
+    currentUser = await _auth.currentUser();
     return currentUser;
   }
 
-  Future<User> signIn() async {
+  Future<FirebaseUser> signIn() async {
 
     GoogleSignInAccount _signInAccount = await _googleSignIn.signIn();
     GoogleSignInAuthentication _signInAuthentication =
         await _signInAccount.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.credential(
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
 
       accessToken: _signInAuthentication.accessToken,
       idToken: _signInAuthentication.idToken
 
     );
 
-    User user = (await _auth.signInWithCredential(credential)).user;
+    FirebaseUser user = (await _auth.signInWithCredential(credential));
     return user;
   }
 
-  Future<bool> authenticateUser(User user) async {
+  Future<bool> authenticateUser(FirebaseUser user) async {
 
     QuerySnapshot result = await _firestore
       .collection("users")
       .where("email", isEqualTo: user.email)
-        .get();
+        .getDocuments();
 
-    final List<DocumentSnapshot> docs = result.docs;
+    final List<DocumentSnapshot> docs = result.documents;
 
       return docs.length == 0 ? true : false;
   }
 
-  Future<void> addDataToDb(User currentUser) async {
+  Future<void> addDataToDb(FirebaseUser currentUser) async {
     String username = Utils.getUsername(currentUser.email);
 
     user = Userr(
         uid: currentUser.uid,
         email: currentUser.email,
         name: currentUser.displayName,
-        profilePhoto: currentUser.photoURL,
+        profilePhoto: currentUser.photoUrl,
         username: username);
 
     _firestore
         .collection("users")
-        .doc(currentUser.uid)
-        .set(user.toMap(user));
+        .document(currentUser.uid)
+        .setData(user.toMap(user));
   }
 
   Future<void> signOut() async{
@@ -78,14 +78,14 @@ class FirebaseMethods {
     return await _auth.signOut();
   }
 
-  Future<List<Userr>> fetchAllUsers(User currentUser) async {
+  Future<List<Userr>> fetchAllUsers(FirebaseUser currentUser) async {
     List<Userr> userList = List<Userr>();
 
     QuerySnapshot querySnapshot =
-    await _firestore.collection("users").get();
-    for (var i = 0; i < querySnapshot.docs.length; i++) {
-      if (querySnapshot.docs[i].id != currentUser.uid) {
-        userList.add(Userr.fromMap(querySnapshot.docs[i].data()));
+    await _firestore.collection("users").getDocuments();
+    for (var i = 0; i < querySnapshot.documents.length; i++) {
+      if (querySnapshot.documents[i].documentID != currentUser.uid) {
+        userList.add(Userr.fromMap(querySnapshot.documents[i].data));
         //TODO: might not work
       }
     }
@@ -93,10 +93,10 @@ class FirebaseMethods {
   }
 
   Future<Userr> getUserDetails() async {
-    User currentUser = await getCurrentUser();
+    FirebaseUser currentUser = await getCurrentUser();
 
     DocumentSnapshot documentSnapshot =
-    await _userCollection.doc(currentUser.uid).get();
+    await _userCollection.document(currentUser.uid).get();
 
     return Userr.fromMap(documentSnapshot.data);
   }
@@ -107,13 +107,13 @@ class FirebaseMethods {
 
     await _firestore
         .collection("wakeups")
-        .doc(wakeup.senderId)
+        .document(wakeup.senderId)
         .collection(wakeup.receiverId)
         .add(map);
 
     return await _firestore
         .collection("wakeups")
-        .doc(wakeup.receiverId)
+        .document(wakeup.receiverId)
         .collection(wakeup.senderId)
         .add(map);
   }
@@ -124,13 +124,13 @@ class FirebaseMethods {
 
     await _firestore
         .collection("messages")
-        .doc(message.senderId)
+        .document(message.senderId)
         .collection(message.receiverId)
         .add(map);
 
     return await _firestore
         .collection("messages")
-        .doc(message.receiverId)
+        .document(message.receiverId)
         .collection(message.senderId)
         .add(map);
   }

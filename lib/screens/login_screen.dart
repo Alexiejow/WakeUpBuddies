@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoginPressed = true;
     });
 
-    _repository.signIn().then((User user) {
+    _repository.signIn().then((FirebaseUser user) {
       print("something");
       if (user != null) {
         authenticateUser(user);
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void authenticateUser(User user) {
+  void authenticateUser(FirebaseUser user) {
     _repository.authenticateUser(user).then((isNewUser) {
 
       setState(() {

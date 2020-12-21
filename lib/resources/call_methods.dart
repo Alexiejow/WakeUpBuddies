@@ -5,10 +5,10 @@ import 'package:wakeupbuddies/models/call.dart';
 
 class CallMethods {
   final CollectionReference callCollection =
-      FirebaseFirestore.instance.collection(CALL_COLLECTION);
+      Firestore.instance.collection(CALL_COLLECTION);
 
   Stream<DocumentSnapshot> callStream({String uid}) =>
-      callCollection.doc(uid).snapshots();
+      callCollection.document(uid).snapshots();
 
   Future<bool> makeCall({Call call}) async {
     try {
@@ -18,8 +18,8 @@ class CallMethods {
       call.hasDialled = false;
       Map<String, dynamic> hasNotDialledMap = call.toMap(call);
 
-      await callCollection.doc(call.callerId).set(hasDialledMap);
-      await callCollection.doc(call.receiverId).set(hasNotDialledMap);
+      await callCollection.document(call.callerId).setData(hasDialledMap);
+      await callCollection.document(call.receiverId).setData(hasNotDialledMap);
       return true;
     } catch (e) {
       print(e);
@@ -29,8 +29,8 @@ class CallMethods {
 
   Future<bool> endCall({Call call}) async {
     try {
-      await callCollection.doc(call.callerId).delete();
-      await callCollection.doc(call.receiverId).delete();
+      await callCollection.document(call.callerId).delete();
+      await callCollection.document(call.receiverId).delete();
       return true;
     } catch (e) {
       print(e);

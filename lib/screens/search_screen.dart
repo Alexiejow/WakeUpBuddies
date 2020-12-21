@@ -6,6 +6,8 @@ import 'package:wakeupbuddies/resources/firebase_repository.dart';
 import 'package:wakeupbuddies/utils/universal_variables.dart';
 import 'package:wakeupbuddies/widgets/custom_tile.dart';
 
+import 'callscreens/pickup/pickup_layout.dart';
+import 'callscreens/pickup/pickup_screen.dart';
 import 'chatscreens/chat_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -25,7 +27,7 @@ class _SearchScreenState extends State<SearchScreen> {
     // TODO: implement initState
     super.initState();
 
-    _repository.getCurrentUser().then((User user) {
+    _repository.getCurrentUser().then((FirebaseUser user) {
       _repository.fetchAllUsers(user).then((List<Userr> list) {
         setState(() {
           userList = list;
@@ -36,50 +38,50 @@ class _SearchScreenState extends State<SearchScreen> {
 
   searchAppBar(BuildContext context) {
     return GradientAppBar(
-      gradient: LinearGradient(colors: [UniversalVariables.gradientColorStart, UniversalVariables.gradientColorEnd]),
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
-      elevation: 0,
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight + 20),
-        child: Padding(
-          padding: EdgeInsets.only(left: 20),
-          child: TextField(
-            controller: searchController,
-            onChanged: (val) {
-              setState(() {
-                query = val;
-              });
-            },
-            cursorColor: UniversalVariables.blackColor,
-            autofocus: true,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontSize: 35,
-            ),
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                icon: Icon(Icons.close, color: Colors.white),
-                onPressed: () {
-                  WidgetsBinding.instance
-                      .addPostFrameCallback((_) => searchController.clear());
-                },
-              ),
-              border: InputBorder.none,
-              hintText: "Search",
-              hintStyle: TextStyle(
+        gradient: LinearGradient(colors: [UniversalVariables.gradientColorStart, UniversalVariables.gradientColorEnd]),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        elevation: 0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight + 20),
+          child: Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: TextField(
+              controller: searchController,
+              onChanged: (val) {
+                setState(() {
+                  query = val;
+                });
+              },
+              cursorColor: UniversalVariables.blackColor,
+              autofocus: true,
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
                 fontSize: 35,
-                color: Color(0x88ffffff),
+              ),
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.close, color: Colors.white),
+                  onPressed: () {
+                    WidgetsBinding.instance
+                        .addPostFrameCallback((_) => searchController.clear());
+                  },
+                ),
+                border: InputBorder.none,
+                hintText: "Search",
+                hintStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 35,
+                  color: Color(0x88ffffff),
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   buildSuggestions(String query) {
@@ -139,12 +141,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: UniversalVariables.blackColor,
-      appBar: searchAppBar(context),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: buildSuggestions(query),
+    return PickupLayout(
+      scaffold: Scaffold(
+        backgroundColor: UniversalVariables.blackColor,
+        appBar: searchAppBar(context),
+        body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: buildSuggestions(query),
+        ),
       ),
     );
   }

@@ -74,6 +74,10 @@ dependencies:
 
   date_format: ^1.0.9
 
+  firebase_core: ^0.4.0
+
+  firebase_messaging:
+
 
 dev_dependencies:
   flutter_test:
